@@ -1,0 +1,44 @@
+{% set name = "nba-api" %}
+{% set version = "1.4.1" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/nba_api-{{ version }}.tar.gz
+  sha256: dc421ed4a6fa5928cb4b26a4fa473d29c4f83866274b2bb86bc841e9508592a2
+
+build:
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python >=3.8,<4.0
+    - poetry-core
+    - pip
+  run:
+    - python >=3.8.0,<4.0.0
+    - requests >=2.31.0,<3.0.0
+    - numpy >=1.22.2,<2.0.0
+    - certifi >=2023.7.22,<2024.0.0
+
+test:
+  imports:
+    - nba_api
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  home: https://github.com/swar/nba_api
+  summary: An API Client package to access the APIs for NBA.com
+  license: MIT
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - richparks92
