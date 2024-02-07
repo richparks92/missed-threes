@@ -1,4 +1,4 @@
-from db_methods import create_connection, DB_PATH, TEAM_SHOT_STREAKS_TABLE, PLAYER_SHOT_STREAKS_TABLE, THREE_PT_SHOT_STREAKS_TABLE
+from db_methods import create_connection, DB_PATH, TEAM_GAME_STREAKS_TABLE, PLAYER_GAME_STREAKS_TABLE
 import pandas as pd
 import numpy as np
 
@@ -89,13 +89,7 @@ def agg_streaks_by_game(df, streak_criteria):
 def agg_streak_counts(df):
     # Aggregate counts
     game_count_df = df.groupby('game_streak_val')['game_id'].count().reset_index(name='game_count')
-    # print("game_ count df")
-    # print(game_count_df)
-
     streak_count_df = df.groupby('streak_id')['game_streak_val'].sum().value_counts().reset_index(name="streak_count").sort_index()
-    # print("streak count df")
-    # print(streak_count_df)
-
     merged = streak_count_df.merge(game_count_df, on="game_streak_val", how="outer")
 
     # Rename columns
@@ -119,7 +113,7 @@ def get_team_miss_streaks(threshold = 0, read_db_limit = 0):
         query = query,
         game_streaks_csv_path= "exports/game_streaks/team_game_streaks.csv",
         streak_counts_csv_path= "exports/team_streak_counts.csv",
-        save_table_name=TEAM_SHOT_STREAKS_TABLE,
+        save_table_name=TEAM_GAME_STREAKS_TABLE,
         threshhold=threshold
     )
 
@@ -134,7 +128,7 @@ def get_player_miss_streaks(threshhold = 0 ,read_db_limit = 0 ):
         query = query, 
         game_streaks_csv_path= "exports/game_streaks/player_game_streaks.csv",
         streak_counts_csv_path="exports/player_streak_counts.csv", 
-        save_table_name=PLAYER_SHOT_STREAKS_TABLE, 
+        save_table_name=PLAYER_GAME_STREAKS_TABLE, 
         threshhold=threshhold)
     return streaks_df
 
@@ -153,7 +147,7 @@ def get_streaks(streak_criteria, query, game_streaks_csv_path, streak_counts_csv
 
     streaks_df = streaks_df[["game_id", "event_num","team_id", "player_id", "streak_id", "game_streak_val"]]
     print("Saving to db.")
-    res = streaks_df.to_sql(save_table_name, conn, if_exists= "replace", index= False)
+    res = game_streaks_df.to_sql(save_table_name, conn, if_exists= "replace", index= False)
     conn.close()
     print("Saved to db.")
     return streaks_df
