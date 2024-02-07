@@ -33,6 +33,7 @@ def get_threshold_miss_streaks_table(threshold = -20):
         first_game_date=pd.NamedAgg(column="game_date", aggfunc="min"),
         last_game_date=pd.NamedAgg(column="game_date", aggfunc="max")
     )
+    df = df[df["total_streak_val"] < 0]
     rows_in_threshold = df["total_streak_val"] <= threshold
     others_total_sum = len(df[~ rows_in_threshold])
 
@@ -40,8 +41,6 @@ def get_threshold_miss_streaks_table(threshold = -20):
     df["streak_count"] = 1
     df.loc[0] = {"streak_count": others_total_sum, "streak_game_count":0, "total_streak_val":0}
     df =df.sort_values(["total_streak_val"], ascending=False)
-    
-
     print(df)
     df.to_csv(f"{save_folder_path}/over_20_miss_streaks.csv")
     return df
@@ -55,7 +54,7 @@ def get_threshold_misses_table(threshold= 37):
             TEAM_NAME,
             GAME_DATE,
             FG3M AS FG3MD,
-            FG3A- FG3M AS FG3MS,
+            FG3A- FG3M AS FG3MISS,
             FG3A AS FG3ATT,
             ROUND(FG3M *100.0/ FG3A , 2) AS FG3PCT,
             CASE	
@@ -66,13 +65,13 @@ def get_threshold_misses_table(threshold= 37):
         ORDER BY FG3PCT 
 """
     df = pd.read_sql_query(query, conn)
-    rows_in_threshold = df["FG3MS"] >= threshold
+    rows_in_threshold = df["FG3MISS"] >= threshold
     others_total_count = len(df[~ rows_in_threshold])
     df = df[rows_in_threshold]
     df["game_count"] = 1
-    df.loc[0] = {"game_count":others_total_count, "GAME_ID": 0}
+    df.loc[0] = {"game_count": others_total_count, "GAME_ID": 0}
     print(df)
     df.to_csv(f"{save_folder_path}/over_37_misses.csv")
 
-#get_threshold_miss_streaks_table()
+get_threshold_miss_streaks_table()
 get_threshold_misses_table()
