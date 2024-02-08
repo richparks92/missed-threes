@@ -1,2 +1,2 @@
 ### Analyzing NBA Missed Three-Pointers ###
-This repo contains the scripts that I used to analyze NBA 3-pointer data, inspired by the Rockets' 27 straight missed three pointers in Game 7 of the 2018 Western Conference Finals. More more detail and background, please see my post on analyzing the data here: https://richchrisparks.com/analyzing-nba-3-point-shot-streaks-with-python-pandas-and-tableau/
+This repo contains the scripts that I used to analyze NBA 3-pointer data, inspired by the Rockets' 27 straight missed three pointers in Game 7 of the 2018 Western Conference Finals. For more detail and background, please see my post on analyzing the data here: https://richchrisparks.com/analyzing-nba-3-point-shot-streaks-with-python-pandas-and-tableau/
